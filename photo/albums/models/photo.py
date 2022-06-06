@@ -31,15 +31,12 @@ def validate_image_content_type(image_field_obj):
     ]
 
     file = image_field_obj
-    # print(type(file))
 
     from django.db.models.fields.files import ImageFieldFile
     from django.core.exceptions import ValidationError
     from django.core.files.uploadedfile import InMemoryUploadedFile
 
     if isinstance(file, ImageFieldFile):
-        # print(type(file))
-        # print(type(file.file))
         file = file.file
 
     if not isinstance(file, InMemoryUploadedFile):

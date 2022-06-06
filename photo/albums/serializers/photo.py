@@ -1,8 +1,12 @@
-
 from rest_framework import serializers
 
-from albums.models import Photo
+from albums.models import Photo, Album
 
+class AlbumsPKField(serializers.PrimaryKeyRelatedField):
+    def get_queryset(self):
+        user = self.context['request'].user
+        queryset = Album.objects.filter(user=user)
+        return queryset
 
 class ImageInfoSerializer(serializers.Serializer):
     url = serializers.CharField(read_only=True)
@@ -21,6 +25,7 @@ class PhotoSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     image_info = ImageInfoSerializer(read_only=True, source="image", )
     image_small_info = ImageInfoSerializer(read_only=True, source="image_small", )
+    album = AlbumsPKField()
 
     class Meta:
         model = Photo

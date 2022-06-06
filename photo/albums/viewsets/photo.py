@@ -6,7 +6,6 @@ from ..serializers import PhotoSerializer, PhotoUpdateSerializer
 from ..models import Photo
 from rest_framework import filters
 
-
 class PhotoViewSet(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin,
@@ -18,8 +17,8 @@ class PhotoViewSet(mixins.CreateModelMixin,
     """
 
     queryset = Photo.objects.all()
-    # serializer_class = PhotoSerializer
     permission_classes = (IsAuthenticated,)
+    lookup_field = 'pk'
 
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['album', 'tags']
