@@ -4,8 +4,9 @@ from rest_framework.permissions import IsAuthenticated
 from ..serializers import AlbumSerializer
 from ..models import Album
 
-# from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from django.db.models import Count
 
 class AlbumViewSet(viewsets.ModelViewSet):
     queryset = Album.objects.all()
@@ -14,11 +15,10 @@ class AlbumViewSet(viewsets.ModelViewSet):
 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name']
-    ordering_fields = ['created_at', 'count']
+    ordering_fields = ['created_at', 'number_of_photos']
     ordering = ['created_at']
 
     def get_queryset(self):
-        user = self.request.user
-        # print(user)
-        items = Album.objects.filter(user=user)
-        return items
+        queryset = self.queryset.filter(user=self.request.user)
+        queryset = queryset.annotate(number_of_photos=Count('photos'))
+        return queryset

@@ -24,17 +24,4 @@ class Album(models.Model):
         ordering = ("user", "name",)
         unique_together = ('name', 'user')
 
-    @classmethod
-    def get_queryset_by_request(cls, request: HttpRequest, user: User):
-
-        from albums.serializers.album import AlbumFilterSerializer
-        p = AlbumFilterSerializer(data=request.GET)
-        p.is_valid()
-
-        from albums.filters.album import AlbumFilter
-        filter = AlbumFilter(**p.validated_data)
-        from django.db.models import Count
-        ret = cls.objects.filter(user=user).filter(filter.get_q_filter()).annotate(count=Count("photos")).order_by(
-            *filter.get_ordering())
-        return ret
 
