@@ -62,6 +62,5 @@ class PhotoListViewSet(mixins.ListModelMixin,
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        user = self.request.user
-        items = Photo.get_queryset_by_request(request=self.request, user=user)
-        return items
+        queryset = self.queryset.filter(user=self.request.user)
+        return queryset
