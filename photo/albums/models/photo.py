@@ -8,6 +8,7 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
 from user.models import User
+from django.utils import timezone
 
 extensions = [
     'jpg',
@@ -56,8 +57,8 @@ def validate_image_content_type(image_field_obj):
 
 class Photo(models.Model):
     name = models.CharField(verbose_name="Название", max_length=256, unique=False)
-    created_at = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True, )
-    updated_at = models.DateTimeField(verbose_name='Дата изменения', auto_now=True, )
+    created_at = models.DateTimeField(verbose_name='Дата создания', default=timezone.now)
+    updated_at = models.DateTimeField(verbose_name='Дата изменения', default=timezone.now)
     album = models.ForeignKey(Album, verbose_name='Альбом', on_delete=models.CASCADE, related_name='photos', null=False)
     tags = models.ManyToManyField(Tag, verbose_name="Теги", related_name="photos", blank=True)
     photo = models.ImageField(verbose_name="Изображение", blank=False, null=False, upload_to='photos',

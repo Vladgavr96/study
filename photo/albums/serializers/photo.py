@@ -2,11 +2,13 @@ from rest_framework import serializers
 
 from albums.models import Photo, Album
 
+
 class AlbumsPKField(serializers.PrimaryKeyRelatedField):
     def get_queryset(self):
         user = self.context['request'].user
         queryset = Album.objects.filter(user=user)
         return queryset
+
 
 class ImageInfoSerializer(serializers.Serializer):
     url = serializers.CharField(read_only=True)
@@ -32,17 +34,23 @@ class PhotoSerializer(serializers.ModelSerializer):
         exclude = ("updated_at",)
         read_only_fields = ['image_small']
 
+
 class PhotoUpdateSerializer(PhotoSerializer):
     class Meta(PhotoSerializer.Meta):
         read_only_fields = ['image_small', "image"]
 
 
 class PhotoFilterSerializer(serializers.Serializer):
-    album_id = serializers.ListField(child=serializers.IntegerField(min_value=1), allow_empty=True, min_length=None, max_length=None, default=[])
-    tag_id = serializers.ListField(child=serializers.IntegerField(min_value=1), allow_empty=True, min_length=None, max_length=None, default=[])
-    album_name = serializers.ListField(child=serializers.CharField(), allow_empty=True, min_length=None, max_length=None, default=[])
-    tag_name = serializers.ListField(child=serializers.CharField(), allow_empty=True, min_length=None, max_length=None, default=[])
-    ordering = serializers.ListField(child=serializers.CharField(), allow_empty=True, min_length=None, max_length=None, default=[])
+    album_id = serializers.ListField(child=serializers.IntegerField(min_value=1), allow_empty=True, min_length=None,
+                                     max_length=None, default=[])
+    tag_id = serializers.ListField(child=serializers.IntegerField(min_value=1), allow_empty=True, min_length=None,
+                                   max_length=None, default=[])
+    album_name = serializers.ListField(child=serializers.CharField(), allow_empty=True, min_length=None,
+                                       max_length=None, default=[])
+    tag_name = serializers.ListField(child=serializers.CharField(), allow_empty=True, min_length=None, max_length=None,
+                                     default=[])
+    ordering = serializers.ListField(child=serializers.CharField(), allow_empty=True, min_length=None, max_length=None,
+                                     default=[])
 
     def update(self, instance, validated_data):
         pass
