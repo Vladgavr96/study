@@ -148,22 +148,15 @@ class AlbumTestCase(APITestCase):
         response = c.get(f'/api/v1/photos/{photo_id}/')
         self.assertEqual(response.status_code, 200)
 
-    def test_put_photo_api_13(self):
+    def test_patch_photo_api_13(self):
         c = Client()
         c.login(username='User1', password='password1')
         response = c.get('/api/v1/photos/')
         content = json.loads(response.content.decode('utf-8'))
         ids = [photo['id'] for photo in content]
         photo_id = ids[0]
-        c.put(f'/api/v1/photos/{photo_id}/', {'name': 'updated_photo', 'tags': [
-            {
-                'name': 'tag1'
-            },
-            {
-                'name': 'tag3'
-            }]}, content_type='application/json')
+        c.patch(f'/api/v1/photos/{photo_id}/', {'name': 'updated_photo'}, content_type='application/json')
         response = c.get(f'/api/v1/photos/{photo_id}/')
         content = json.loads(response.content.decode('utf-8'))
+        print(content)
         self.assertEqual(content['name'], 'updated_photo')
-        self.assertEqual(content['tags'][0]['name'], 'tag1')
-        self.assertEqual(content['tags'][1]['name'], 'tag3')
