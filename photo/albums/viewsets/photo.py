@@ -1,10 +1,14 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from ..serializers import PhotoSerializer, PhotoUpdateSerializer
 from ..models import Photo
 from rest_framework import filters
+from rest_framework.authtoken.models import Token
+
 
 class PhotoViewSet(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
@@ -17,7 +21,6 @@ class PhotoViewSet(mixins.CreateModelMixin,
     """
 
     queryset = Photo.objects.all()
-    permission_classes = (IsAuthenticated,)
     lookup_field = 'pk'
 
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
@@ -27,10 +30,13 @@ class PhotoViewSet(mixins.CreateModelMixin,
     ordering = ['album']
 
     def get_queryset(self):
-        user = self.request.user
+        if self.request.META.get('HTTP_AUTHORIZATION') is not None:
+            user = Token.objects.get(key=self.request.META.get('HTTP_AUTHORIZATION').split()[1]).user
+            print(user)
+        elif self.request.user:
+            user = self.request.user
         items = Photo.objects.filter(user=user)
         return items
-
 
     def get_serializer_class(self):
         if self.action in ['update', 'partial_update']:

@@ -1,5 +1,4 @@
 from django.db import models
-from django.http import HttpRequest
 from ..models.tag import Tag
 from ..models.album import Album
 from django.core.validators import FileExtensionValidator
@@ -96,15 +95,11 @@ class Photo(models.Model):
         else:
             return False
 
-        # Save thumbnail to in-memory file as StringIO
         temp_thumb = BytesIO()
         image.save(temp_thumb, FTYPE)
         temp_thumb.seek(0)
 
-        # set save=False, otherwise it will run in an infinite loop
         self.thumbnail.save(thumb_filename, ContentFile(temp_thumb.read()), save=False)
         temp_thumb.close()
 
         return True
-
-
