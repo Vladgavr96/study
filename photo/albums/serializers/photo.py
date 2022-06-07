@@ -38,22 +38,3 @@ class PhotoSerializer(serializers.ModelSerializer):
 class PhotoUpdateSerializer(PhotoSerializer):
     class Meta(PhotoSerializer.Meta):
         read_only_fields = ['image_small', "image"]
-
-
-class PhotoFilterSerializer(serializers.Serializer):
-    album_id = serializers.ListField(child=serializers.IntegerField(min_value=1), allow_empty=True, min_length=None,
-                                     max_length=None, default=[])
-    tag_id = serializers.ListField(child=serializers.IntegerField(min_value=1), allow_empty=True, min_length=None,
-                                   max_length=None, default=[])
-    album_name = serializers.ListField(child=serializers.CharField(), allow_empty=True, min_length=None,
-                                       max_length=None, default=[])
-    tag_name = serializers.ListField(child=serializers.CharField(), allow_empty=True, min_length=None, max_length=None,
-                                     default=[])
-    ordering = serializers.ListField(child=serializers.CharField(), allow_empty=True, min_length=None, max_length=None,
-                                     default=[])
-
-    def update(self, instance, validated_data):
-        pass
-
-    def create(self, validated_data):
-        pass

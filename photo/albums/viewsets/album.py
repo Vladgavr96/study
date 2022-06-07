@@ -4,7 +4,6 @@ from rest_framework.permissions import IsAuthenticated
 from ..serializers import AlbumSerializer
 from ..models import Album
 
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from django.db.models import Count
 

@@ -12,13 +12,3 @@ class AlbumSerializer(serializers.ModelSerializer):
     class Meta:
         model = Album
         fields = "__all__"
-
-
-class AlbumFilterSerializer(serializers.Serializer):
-    ordering = serializers.ListField(child=serializers.CharField(), allow_empty=True, min_length=None, max_length=None, default=[])
-
-    def update(self, instance, validated_data):
-        pass
-
-    def create(self, validated_data):
-        pass
